@@ -1,0 +1,70 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "virtualMachines_AZVMUBU01_name": {
+            "defaultValue": "AZVMUBU01",
+            "type": "String"
+        },
+        "disks_AZVMUBU01_disk1_b30871423ed34f7393f02f88479664c9_externalid": {
+            "defaultValue": "/subscriptions/0ee1945e-2260-42a5-954e-59b1671a0d60/resourceGroups/RG02/providers/Microsoft.Compute/disks/AZVMUBU01_disk1_b30871423ed34f7393f02f88479664c9",
+            "type": "String"
+        },
+        "networkInterfaces_AZVMUBU01NetInt_externalid": {
+            "defaultValue": "/subscriptions/0ee1945e-2260-42a5-954e-59b1671a0d60/resourceGroups/RG02/providers/Microsoft.Network/networkInterfaces/AZVMUBU01NetInt",
+            "type": "String"
+        }
+    },
+    "variables": {},
+    "resources": [
+        {
+            "type": "Microsoft.Compute/virtualMachines",
+            "apiVersion": "2019-07-01",
+            "name": "[parameters('virtualMachines_AZVMUBU01_name')]",
+            "location": "eastus",
+            "properties": {
+                "hardwareProfile": {
+                    "vmSize": "Standard_B2s"
+                },
+                "storageProfile": {
+                    "imageReference": {
+                        "publisher": "Canonical",
+                        "offer": "UbuntuServer",
+                        "sku": "18.04-LTS",
+                        "version": "latest"
+                    },
+                    "osDisk": {
+                        "osType": "Linux",
+                        "name": "[concat(parameters('virtualMachines_AZVMUBU01_name'), '_disk1_b30871423ed34f7393f02f88479664c9')]",
+                        "createOption": "FromImage",
+                        "caching": "ReadWrite",
+                        "managedDisk": {
+                            "storageAccountType": "Standard_LRS",
+                            "id": "[parameters('disks_AZVMUBU01_disk1_b30871423ed34f7393f02f88479664c9_externalid')]"
+                        },
+                        "diskSizeGB": 30
+                    },
+                    "dataDisks": []
+                },
+                "osProfile": {
+                    "computerName": "[parameters('virtualMachines_AZVMUBU01_name')]",
+                    "adminUsername": "darylm53",
+                    "linuxConfiguration": {
+                        "disablePasswordAuthentication": false,
+                        "provisionVMAgent": true
+                    },
+                    "secrets": [],
+                    "allowExtensionOperations": true,
+                    "requireGuestProvisionSignal": true
+                },
+                "networkProfile": {
+                    "networkInterfaces": [
+                        {
+                            "id": "[parameters('networkInterfaces_AZVMUBU01NetInt_externalid')]"
+                        }
+                    ]
+                }
+            }
+        }
+    ]
+}
